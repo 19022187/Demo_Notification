@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnNotify2 = findViewById(R.id.btnNotify2);
-
+/*
         btnNotify2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +129,36 @@ public class MainActivity extends AppCompatActivity {
                 Notification n = builder.build();
 
                 // This replaces the existing notification with the same ID
+                notificationManager.notify(notificationID, n);
+                finish();
+            }
+        });
+        */
+        btnNotify2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel channel = new NotificationChannel("default", "Default Channel", NotificationManager.IMPORTANCE_DEFAULT);
+                    channel.setDescription("This is for default notification");
+                    notificationManager.createNotificationChannel(channel);
+                }
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+                bigText.setBigContentTitle("Deals from top electronics retailers");
+                bigText.bigText("Mobile 50% off\nLaptop 20% off\nTablet 22% off\nPrinter 30% off\nOthers 10% off");
+                bigText.setSummaryText("Excellent deals");
+//Build notification
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "default");
+                builder.setContentTitle("Deals from top electronics retailers");
+                builder.setContentText("Excellent deals");
+                builder.setSmallIcon(android.R.drawable.btn_star_big_off);
+                builder.setContentIntent(pIntent);
+                builder.setStyle(bigText);
+                builder.setAutoCancel(true);
+                Notification n = builder.build();
+//An integer good to have, for you to programmatically cancel it
                 notificationManager.notify(notificationID, n);
                 finish();
             }
